@@ -49,9 +49,3 @@ Thumbs.db
 *.tmp
 *.bak
 *.swp
-
-target
-.git
-.idea
-*.iml
-
