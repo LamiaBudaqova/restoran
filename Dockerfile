@@ -1,11 +1,17 @@
-FROM maven:3.9.8-eclipse-temurin-21 AS build
+# 1) Build stage
+FROM maven:3.9.9-eclipse-temurin-17 AS build
 WORKDIR /app
-COPY restoran/pom.xml .
-COPY restoran/src ./src
-RUN mvn -q -DskipTests clean package
+COPY pom.xml .
+COPY src ./src
+RUN mvn -DskipTests clean package
 
-FROM eclipse-temurin:21-jre
+# 2) Run stage
+FROM eclipse-temurin:17-jre
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
+
+# Render PORT env verir, ona qulaq asaq
+ENV PORT=8080
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","app.jar"]
+
+CMD ["sh", "-c", "java -Dserver.port=${PORT} -jar app.jar"]
